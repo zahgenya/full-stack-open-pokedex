@@ -1,0 +1,34 @@
+name: Cypress Tests
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4, 5]
+    steps:
+            
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start server
+        run: npm run start-prod &
+        shell: bash
+
+      - name: Wait for server to start
+        run: npx wait-on http://0.0.0.0:9050
+        continue-on-error: true
+
+      - name: Run Cypress tests
+        run: npm run test:e2e
+        env:
+          CYPRESS_BASE_URL: http://0.0.0.0:9050
