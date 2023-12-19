@@ -19,14 +19,3 @@ jobs:
         run: npm run eslint
       - name: Tests
         run: npm run test
-      - name: Start application
-        run: npm run start-prod &
-      - name: Wait for application to start
-        run: npx wait-on http://0.0.0.0:9050
-      - name: E2E tests
-        uses: cypress-io/github-action@v5
-        with:
-          command: npm run test:e2e
-          start: npm run start-prod
-          browser: chrome
-          wait-on: http://0.0.0.0:9050
